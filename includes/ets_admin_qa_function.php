@@ -1,5 +1,8 @@
 <?php
-// admin controller
+/**
+ * Handles admin screen operations
+ */
+
 class ETS_WOO_PRODUCT_ADMIN_QUESTION_ANSWER 
 { 	
 	public function __construct() { 

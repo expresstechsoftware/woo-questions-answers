@@ -34,20 +34,23 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 	}
 
 	/**
-	*Create the new Tabe Add Question Field
+	*Create the new Tab Add Question Field
 	*/ 
 	public function question_tab( $tabs ) { 
 	     
 	    $tabs['ask'] = array(
 		    'title'     =>  __( __("Q & A",'ets_q_n_a'), 'woocommerce'),
 		    'priority'  => 50,
-		    'callback'  => array($this , 'ets_ask_qustion_tab')
+		    'callback'  => array($this , 'ets_ask_qustion_tab'),
     	);  
+
     	return $tabs;
 	}  
  
 	/**
-	* Save The post Question.
+	* Save The post Question
+	* 
+	* @return void
 	*/
 	public function question_save(){ 
 		if(!wp_verify_nonce($_POST['add_qustion_nonce'],'ets-product-add-new-question')){
@@ -142,14 +145,18 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 	}  
 
 	/**
-	* Question Mail Html
+	* Mail type of this mails
+	* 
+	* @return string
 	*/
 	public function set_html_mail_contente_type() {
 		return "text/html";
 	}
 	
 	/**
- 	*Create Text Area and Ask button
+ 	* Create text area and ask button
+ 	* 
+ 	* @return void
  	*/
  	public function ets_ask_qustion_tab() {  
  		global $product; 
@@ -342,7 +349,7 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 	}
 
 	/**
-	* Load More Button Post Data Using Ajax
+	* Load more button post data using ajax
 	*/
 	public function load_more_qa(){ 
 		if(!wp_verify_nonce($_GET['load_qa_nonce'],'ets-product-load-more-question')){ 
@@ -446,7 +453,9 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 	}
 
 	/**
-	*  JS Variables
+	* JS Variables
+	* 
+	* @return void
 	*/
 	public function qa_plugin_script() {
 		wp_enqueue_script( 'ets_woo_qa_script_js', ETS_WOO_QA_PATH . 'asset/js/ets_woo_qa_script.js',array( 'jquery' ),'1.6',true  );
