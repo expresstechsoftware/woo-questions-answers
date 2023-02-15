@@ -492,7 +492,7 @@ class ETS_WOO_PRODUCT_ADMIN_QUESTION_ANSWER
 				$site_name = get_bloginfo('name');  				
 
 				// If the answer was changed
-				if ( !empty(trim($value['answer'])) && !empty(trim($value['user_email'])) && (trim($value['answer']) != trim($before_save[$key]['answer']) && !empty( trim( $before_save[$key]['answer'] )  ) ) )
+				if ( $before_save && !empty(trim($value['answer'])) && !empty(trim($value['user_email'])) && (trim($value['answer']) != trim($before_save[$key]['answer']) && !empty( trim( $before_save[$key]['answer'] )  ) ) )
 				{
 
 			 		$subject =apply_filters("wc_qa_answer_updated_mail_subject" ,__("Answer to Your Question was Updated",'ets_q_n_a'). ': ' . get_bloginfo('name'));
@@ -504,7 +504,7 @@ class ETS_WOO_PRODUCT_ADMIN_QUESTION_ANSWER
 				    $res = wp_mail($to, $subject, $message);
 				 
 				// First time answer    
-				} elseif ( empty( trim( $before_save[$key]['answer'] ) ) && !empty( trim( $value['answer'] ) )  && !empty(trim($value['user_email'])) ) {  
+				} elseif ( $before_save && empty( trim( $before_save[$key]['answer'] ) ) && !empty( trim( $value['answer'] ) )  && !empty(trim($value['user_email'])) ) {  
 					$subject = __("Your Question was Answered",'ets_q_n_a'). ': ' . get_bloginfo('name');
 			 		$subject = apply_filters("wc_qa_new_answer_mail_subject", $subject);
 			 		$message = "Dear " . $userName . ",<br><br>";
