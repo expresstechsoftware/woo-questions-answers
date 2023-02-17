@@ -58,9 +58,12 @@ No configuration needed! just install and it will start working from there, you 
 - Added multi-language support.
 
 = 1.1.1 =
-- Fix: Fixed the email not being sent for questions and answers
+- Fix: Fixed the email not being sent for questions and answers.
 - Dev: Added the emails for changes in the answers by site admin.
 
 = 1.2.0 =
 - Dev: Added the ability to approve / unapprove questions and a global setting to record questions as approved or unapprove.
 - Dev: Added some hooks to customize the plugin.
+
+= 1.2.2 =
+- Fix: Fixed a PHP warning on the admin screen.
