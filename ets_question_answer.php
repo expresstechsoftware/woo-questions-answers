@@ -22,6 +22,12 @@ class ETS_WOO_PRODUCT_QUESTION_ANSWER {
 		add_action( 'init', array($this, 'qa_load_local'));	
 		require ( 'includes/ets_admin_qa_function.php' );
 		require( 'includes/ets_user_qa_function.php' );	
+		add_action( 'before_woocommerce_init', function() {
+			if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+				\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+			}
+		} );
+		
 	}  
 
 	public function qa_load_local() {
