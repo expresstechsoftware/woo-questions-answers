@@ -18,12 +18,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 define( 'ETS_WOO_QA_PATH', plugin_dir_url( __FILE__ ) );
+define( 'ETS_WOO_QA_DIR_PATH', plugin_dir_path( __FILE__ ) );
 
 class ETS_WOO_PRODUCT_QUESTION_ANSWER {
 	public function __construct() {
 		add_action( 'init', array( $this, 'qa_load_local' ) );
 		require 'includes/ets_admin_qa_function.php';
 		require 'includes/ets_user_qa_function.php';
+		require 'includes/ets-admin-qa-admin-notices.php';
 	}
 
 	public function qa_load_local() {
