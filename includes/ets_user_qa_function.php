@@ -13,6 +13,8 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 
 		// Load The Q & A on click Load More Button
 		add_action( 'wp_ajax_ets_product_qa_load_more',array($this, 'load_more_qa'));
+		//shortcode for QA listing
+		add_shortcode( 'display_qa_list',array($this, 'display_qa_listing_shortcode'));
 
 		// without login
 		add_action( 'wp_ajax_nopriv_ets_product_qa_load_more',array($this, 'load_more_qa'));
@@ -195,176 +197,187 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 				);
 			?>
 			<?php  
-			}  
-			$loadMoreButtonName = get_option('ets_load_more_button_name');
-			$productQaLength = get_option('ets_product_q_qa_list_length'); 
-			$loadMoreButton = get_option('ets_load_more_button'); 	
-			$pagingType = get_option('ets_product_qa_paging_type' ); 
-			$all_questions = get_post_meta( $productId,'ets_question_answer', true );
+		} 
+		 	
+		echo do_shortcode( '[display_qa_list]' );	
+	}
 
-			if($all_questions && is_array($all_questions)){
-				
-				$etsGetQuestion = array_filter($all_questions, function ($filterQuestion) {
-					return (isset($filterQuestion['approve']) && $filterQuestion['approve'] == 'yes') || !isset($filterQuestion['approve']);
-				});
-			}
+	/**
+ 	*Create shortcode for QA listing.
+ 	*/
+	public function display_qa_listing_shortcode(){
+		global $product; 
+		$productId = $product->get_id(); 
+		$loadMoreButtonName = get_option('ets_load_more_button_name');
+		$productQaLength = get_option('ets_product_q_qa_list_length'); 
+		$loadMoreButton = get_option('ets_load_more_button'); 	
+		$pagingType = get_option('ets_product_qa_paging_type' ); 
+		$all_questions = get_post_meta( $productId,'ets_question_answer', true );
+
+		if($all_questions && is_array($all_questions)){
+			
+			$etsGetQuestion = array_filter($all_questions, function ($filterQuestion) {
+				return (isset($filterQuestion['approve']) && $filterQuestion['approve'] == 'yes') || !isset($filterQuestion['approve']);
+			});
+		}
 		
+		if(!empty($etsGetQuestion)){ 
+			end( $etsGetQuestion);
+			$keyData =  max(array_keys($etsGetQuestion));
+
+        } 
+
+		if($loadMoreButton == 1) { 
+			if(empty($loadMoreButtonName)){
+				$loadMoreButtonName = __("Load More",'ets_q_n_a');
+				update_option( 'ets_load_more_button_name', $loadMoreButtonName );
+			}  
+
+			
 			if(!empty($etsGetQuestion)){ 
-				end( $etsGetQuestion);
-				$keyData =  max(array_keys($etsGetQuestion));
+				
+				$count = 1;
 
-            } 
-
-			if($loadMoreButton == 1) { 
-				if(empty($loadMoreButtonName)){
-					$loadMoreButtonName = __("Load More",'ets_q_n_a');
-					update_option( 'ets_load_more_button_name', $loadMoreButtonName );
-				}  
+				if (empty($productQaLength)) {  
+				  	$productQaLength = 4;
+					
+				}
 
 				
-				if(!empty($etsGetQuestion)){ 
-					
-					$count = 1;
-
-					if (empty($productQaLength)) {  
-					  	$productQaLength = 4;
-						
-					}
-
-					
-					if($pagingType == 'accordion'){
-						?>
-						<div class='ets-qa-listing'>
-						<?php
-
-						foreach ($etsGetQuestion as $key => $value) {
-
-							?>
-							<div class="ets-accordion">
-								<span class="que-content"><b><?php echo __('Question','ets_q_n_a') ?>:</b></span>
-								<span class="que-content-des"><?php echo $value['question'];?></span>
-								<h6><?php echo $value['user_name']. "<br>";?><?php echo $value['date']; ?></h6>
-							</div>
-							<div class="ets-panel">
-								<?php 
-								if(!empty($value['answer'])){?>
-									<span class="ans-content"><b><?php echo __('Answer','ets_q_n_a') ?>:</b>
-									</span>
-									<span class="ans-content-des"><?php echo $value['answer'];?>
-									</span>
-								 
-							<?php 
-								} else { ?>
-								<span class="ans-content"><b><?php echo __('Answer','ets_q_n_a') ?>.</b></span>
-								<span class="ans-content-des"><i><?php echo __("Answer awaiting",'ets_q_n_a');?>...</i>
-								</span>
-								<?php
-							}?>
-							</div>
-
-							<?php  
-							$count++;
-							if($count > $productQaLength){
-								break;
-							} 
-							
-						}
-						?> 
-						<div class='ets-accordion-response-add'></div>
-						</div>
-						<?php
-					} else {
-						
-						?>
-						<div class="table-responsive my-table">
-						<table class="table table-striped">
-						<tbody class="table1">
-						<?php
-						//Show Question Answer Listing Type Table With Load More 
-						foreach ($etsGetQuestion as $key => $value) {
-							
-							?>
-							<tr class="ets-question-top">
-								<td class="ets-question-title"><p><?php echo __('Question','ets_q_n_a'); ?>:</p></td>
-								<td class="ets-question-description"><p><?php echo $value['question'];?></p></td> 
-								<td class="ets-cont-right"><h6 class="user-name"><?php echo $value['user_name'] . "<br>";    
-								echo ($value['date']); ?></h6></td>
-							</tr>
-							<?php 
-							if(!empty($value['answer'])){
-							?>
-								<tr>
-									<td class="ets-question-title"><p><?php echo __('Answer','ets_q_n_a'); ?>:</p></td>
-									<td colspan="2"><p> <?php echo $value['answer'];?></p></td> 
-								</tr> 
-							<?php 
-							} else {
-							?>
-								<tr>
-									<td class="ets-question-title"><p><?php echo __('Answer:','ets_q_n_a'); ?></p></td>
-									<td colspan="2" class="ets-no-answer" ><h6><p><i><?php echo __("Answer awaiting",'ets_q_n_a');?>...</i></p></h6></td>	
-								</tr> 
-								<?php
-							}
-							$count++;
-							if($count > $productQaLength){
-								break;
-							}  
-							
-						} ?>
-						</tbody>
-						</table>  
-					</div>
-						<?php
-					}
-					 	?>  
-					<button type="submit" id="ets-load-more" class="btn btn-success" name="ets_load_more" value=""><?php echo $loadMoreButtonName; ?></button>
-					<div class="ets_pro_qa_length"><p hidden><?php echo $keyData;?><p></div>
+				if($pagingType == 'accordion'){
+					?>
+					<div class='ets-qa-listing'>
 					<?php
-				}
-			} else {
-				//Show Question Answer Listing Type Table With OUt Load More
-				if(!empty($etsGetQuestion)){ 
+
+					foreach ($etsGetQuestion as $key => $value) {
+
+						?>
+						<div class="ets-accordion">
+							<span class="que-content"><b><?php echo __('Question','ets_q_n_a') ?>:</b></span>
+							<span class="que-content-des"><?php echo $value['question'];?></span>
+							<h6><?php echo $value['user_name']. "<br>";?><?php echo $value['date']; ?></h6>
+						</div>
+						<div class="ets-panel">
+							<?php 
+							if(!empty($value['answer'])){?>
+								<span class="ans-content"><b><?php echo __('Answer','ets_q_n_a') ?>:</b>
+								</span>
+								<span class="ans-content-des"><?php echo $value['answer'];?>
+								</span>
+							 
+						<?php 
+							} else { ?>
+							<span class="ans-content"><b><?php echo __('Answer','ets_q_n_a') ?>.</b></span>
+							<span class="ans-content-des"><i><?php echo __("Answer awaiting",'ets_q_n_a');?>...</i>
+							</span>
+							<?php
+						}?>
+						</div>
+
+						<?php  
+						$count++;
+						if($count > $productQaLength){
+							break;
+						} 
+						
+					}
+					?> 
+					<div class='ets-accordion-response-add'></div>
+					</div>
+					<?php
+				} else {
+					
 					?>
 					<div class="table-responsive my-table">
-					<table class="table table-striped"> 
+					<table class="table table-striped">
+					<tbody class="table1">
 					<?php
+					//Show Question Answer Listing Type Table With Load More 
 					foreach ($etsGetQuestion as $key => $value) {
-						?> 
+						
+						?>
 						<tr class="ets-question-top">
-								<td class="ets-question-title"><p><?php echo __('Question','ets_q_n_a'); ?>:</p></td>
-								<td class="ets-question-description"><p><?php echo $value['question'];?></p></td> 
-								<td class="ets-cont-right"><h6 class="user-name"><?php echo $value['user_name'] . "<br>";    
-								echo ($value['date']);
-								?></h6></td>
+							<td class="ets-question-title"><p><?php echo __('Question','ets_q_n_a'); ?>:</p></td>
+							<td class="ets-question-description"><p><?php echo $value['question'];?></p></td> 
+							<td class="ets-cont-right"><h6 class="user-name"><?php echo $value['user_name'] . "<br>";    
+							echo ($value['date']); ?></h6></td>
 						</tr>
-
 						<?php 
-						if(!empty($value['answer'])){?>
+						if(!empty($value['answer'])){
+						?>
 							<tr>
 								<td class="ets-question-title"><p><?php echo __('Answer','ets_q_n_a'); ?>:</p></td>
 								<td colspan="2"><p> <?php echo $value['answer'];?></p></td> 
 							</tr> 
-							<?php 
-						} else { ?>
+						<?php 
+						} else {
+						?>
 							<tr>
-								<td class="ets-question-title"><p><?php echo __('Answer','ets_q_n_a'); ?>:</p></td>
-								<td colspan="2" class="ets-no-answer"><h6><p><i><?php echo __("Answer awaiting",'ets_q_n_a');?>...</i></p></h6></td>	
+								<td class="ets-question-title"><p><?php echo __('Answer:','ets_q_n_a'); ?></p></td>
+								<td colspan="2" class="ets-no-answer" ><h6><p><i><?php echo __("Answer awaiting",'ets_q_n_a');?>...</i></p></h6></td>	
 							</tr> 
 							<?php
 						}
+						$count++;
+						if($count > $productQaLength){
+							break;
+						}  
 						
-					}
-					?> 
-					</table>
-					</div>
+					} ?>
+					</tbody>
+					</table>  
+				</div>
 					<?php
-				} 
+				}
+				 	?>  
+				<button type="submit" id="ets-load-more" class="btn btn-success" name="ets_load_more" value=""><?php echo $loadMoreButtonName; ?></button>
+				<div class="ets_pro_qa_length"><p hidden><?php echo $keyData;?><p></div>
+				<?php
 			}
+		} else {
+			//Show Question Answer Listing Type Table With OUt Load More
+			if(!empty($etsGetQuestion)){ 
+				?>
+				<div class="table-responsive my-table">
+				<table class="table table-striped"> 
+				<?php
+				foreach ($etsGetQuestion as $key => $value) {
+					?> 
+					<tr class="ets-question-top">
+							<td class="ets-question-title"><p><?php echo __('Question','ets_q_n_a'); ?>:</p></td>
+							<td class="ets-question-description"><p><?php echo $value['question'];?></p></td> 
+							<td class="ets-cont-right"><h6 class="user-name"><?php echo $value['user_name'] . "<br>";    
+							echo ($value['date']);
+							?></h6></td>
+					</tr>
+
+					<?php 
+					if(!empty($value['answer'])){?>
+						<tr>
+							<td class="ets-question-title"><p><?php echo __('Answer','ets_q_n_a'); ?>:</p></td>
+							<td colspan="2"><p> <?php echo $value['answer'];?></p></td> 
+						</tr> 
+						<?php 
+					} else { ?>
+						<tr>
+							<td class="ets-question-title"><p><?php echo __('Answer','ets_q_n_a'); ?>:</p></td>
+							<td colspan="2" class="ets-no-answer"><h6><p><i><?php echo __("Answer awaiting",'ets_q_n_a');?>...</i></p></h6></td>	
+						</tr> 
+						<?php
+					}
+					
+				}
+				?> 
+				</table>
+				</div>
+				<?php
+			} 
+		}
 			?> 
 		<div class="ets-question-detail-ajax" id="ets-question-detail-ajax"></div>
-  		 
+			 
 		<?php
+
 	}
 
 	/**
