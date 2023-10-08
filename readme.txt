@@ -67,3 +67,9 @@ No configuration needed! just install and it will start working from there, you 
 
 = 1.2.2 =
 - Fix: Fixed a PHP warning on the admin screen.
+
+= 1.2.3 =
+- Compatibility Testing: Tested plugin compatibility with the latest WordPress and WooCommerce versions.
+
+= 1.2.4 =
+- New Compatibility: Added the compatibility for WooCommerce HPOS (High-Performance Order Storage).
