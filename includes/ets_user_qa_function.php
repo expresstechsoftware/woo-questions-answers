@@ -13,6 +13,7 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 
 		// Load The Q & A on click Load More Button
 		add_action( 'wp_ajax_ets_product_qa_load_more',array($this, 'load_more_qa'));
+
 		//shortcode for QA listing
 		add_shortcode( 'display_qa_list',array($this, 'display_qa_listing_shortcode'));
 
@@ -382,8 +383,25 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 	/**
 	* Create shortcode for QA listing.
 	*/
-	public function display_qa_listing_shortcode(){
-		ETS_WOO_PRODUCT_USER_QUESTION_ANSWER::display_qa_listing();
+	public function display_qa_listing_shortcode($atts){
+		global $product; 
+		if($product){
+			$productId = $product->get_id();
+			$atts = shortcode_atts(array(
+	       	 			'product_id' => $productId, 
+	   		 		), $atts);
+
+	    	$product_id = intval($atts['product_id']);
+
+		    // Check if a valid product ID is provided
+		    if ($product_id > 0) {
+		       return ETS_WOO_PRODUCT_USER_QUESTION_ANSWER::display_qa_listing($product_id);
+		    } else {
+
+		        return "Invalid product ID provided.";
+		    }
+		}
+					
 	}
 
 	/**
