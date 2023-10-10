@@ -198,14 +198,13 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 			?>
 			<?php  
 		} 
-		 	
-		echo do_shortcode( '[display_qa_list]' );	
+		 		
 	}
 
 	/**
- 	*Create shortcode for QA listing.
+ 	*Prepare QA listing data.
  	*/
-	public function display_qa_listing_shortcode(){
+	public function display_qa_listing(){
 		global $product; 
 		$productId = $product->get_id(); 
 		$loadMoreButtonName = get_option('ets_load_more_button_name');
@@ -378,6 +377,13 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 			 
 		<?php
 
+	}
+
+	/**
+	* Create shortcode for QA listing.
+	*/
+	public function display_qa_listing_shortcode(){
+		ETS_WOO_PRODUCT_USER_QUESTION_ANSWER::display_qa_listing();
 	}
 
 	/**
