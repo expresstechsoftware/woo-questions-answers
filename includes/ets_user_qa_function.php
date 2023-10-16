@@ -384,16 +384,22 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 	* Create shortcode for QA listing.
 	*/
 	public function display_qa_listing_shortcode($atts){
-		global $product;
-	    $atts = shortcode_atts( array(
-	        'product_id' => '',
-	    ), $atts );
 
-	    if(empty($atts['product_id'])){
-	        return __("Please provide a valid product ID.",'ets_q_n_a');
+	    global $product;
+
+	    if (is_product()) {
+	        $product_id = $product->get_id();
+	    } else {
+	        $atts = shortcode_atts( array(
+	            'product_id' => '',
+	        ), $atts );
+
+	        if(empty($atts['product_id'])){
+	            return __("Please provide a valid product ID.",'ets_q_n_a');
+	        }
+
+	        $product_id = $atts['product_id'];
 	    }
-
-	    $product_id = $atts['product_id'];
 
 	    if(!empty($product_id)){
 	        $product = wc_get_product($product_id);
@@ -402,10 +408,10 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 	            $this->display_qa_listing();
 	            return ob_get_clean();
 	        } else {
-	            return __("Product not found.",'ets_q_n_a');
+	             return __("Product not found.",'ets_q_n_a');
 	        }
 	    } else {
-	        return __("Product ID is required.",'ets_q_n_a');
+	         return __("Product ID is required.",'ets_q_n_a');
 	    }
 	}
 	
