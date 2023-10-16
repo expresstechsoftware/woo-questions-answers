@@ -384,25 +384,31 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 	* Create shortcode for QA listing.
 	*/
 	public function display_qa_listing_shortcode($atts){
-		global $product; 
-		if($product){
-			$productId = $product->get_id();
-			$atts = shortcode_atts(array(
-	       	 			'product_id' => $productId, 
-	   		 		), $atts);
+		global $product;
+	    $atts = shortcode_atts( array(
+	        'product_id' => '',
+	    ), $atts );
 
-	    	$product_id = intval($atts['product_id']);
+	    if(empty($atts['product_id'])){
+	        return __("Please provide a valid product ID.",'ets_q_n_a');
+	    }
 
-		    // Check if a valid product ID is provided
-		    if ($product_id > 0) {
-		       return ETS_WOO_PRODUCT_USER_QUESTION_ANSWER::display_qa_listing($product_id);
-		    } else {
+	    $product_id = $atts['product_id'];
 
-		        return "Invalid product ID provided.";
-		    }
-		}
-					
+	    if(!empty($product_id)){
+	        $product = wc_get_product($product_id);
+	        if($product){
+	            ob_start();
+	            $this->display_qa_listing();
+	            return ob_get_clean();
+	        } else {
+	            return __("Product not found.",'ets_q_n_a');
+	        }
+	    } else {
+	        return __("Product ID is required.",'ets_q_n_a');
+	    }
 	}
+	
 
 	/**
 	* Load More Button Post Data Using Ajax
