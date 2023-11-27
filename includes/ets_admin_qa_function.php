@@ -486,6 +486,7 @@ class ETS_WOO_PRODUCT_ADMIN_QUESTION_ANSWER
 				$to = $value['user_email'];
 				$userName = $value['user_name'];
 				$productTitle = $value['product_title'];
+				$question = $value['question'];
 				$answers = $value['answer'];
 				$url = get_permalink( $productId);
 				$site_url = get_site_url();       
@@ -499,18 +500,18 @@ class ETS_WOO_PRODUCT_ADMIN_QUESTION_ANSWER
 			 		$message = "Dear " . $userName . ",<br><br>";
 			 		$message .= "<a href='$site_url'>" . $site_name . "</a> updated an answer to your question on the product <a href='$url'> " . $productTitle ."</a>:  <br><div style='background-color: #FFF8DC;border-left: 2px solid #ffeb8e;padding: 10px;margin-top:10px;'>". $answers ."</div>";
 
-			 		$message = apply_filters("wc_qa_answer_updated_mail_message", $message, $productTitle, $answers);
+			 		$message = apply_filters("wc_qa_answer_updated_mail_message", $productId, $question, $answers);
 
 				    $res = wp_mail($to, $subject, $message);
 				 
 				// First time answer    
 				} elseif ( $before_save && empty( trim( $before_save[$key]['answer'] ) ) && !empty( trim( $value['answer'] ) )  && !empty(trim($value['user_email'])) ) {  
 					$subject = __("Your Question was Answered",'ets_q_n_a'). ': ' . get_bloginfo('name');
-			 		$subject = apply_filters("wc_qa_new_answer_mail_subject", $subject);
+			 		$subject = apply_filters("wc_qa_new_answer_mail_subject", $productId, $question, $answers);
 			 		$message = "Dear " . $userName . ",<br><br>";
 			 		$message .= "<a href='$site_url'>" . $site_name . "</a> added an answer on the product <a href='$url'> " . $productTitle ."</a>:  <br><div style='background-color: #FFF8DC;border-left: 2px solid #ffeb8e;padding: 10px;margin-top:10px;'>". $answers ."</div>";
 
-			 		$message = apply_filters("wc_qa_new_answer_mail_message", $message, $productTitle, $answers);
+			 		$message = apply_filters("wc_qa_new_answer_mail_message", $productId, $question, $answers);
 				    $res = wp_mail($to, $subject, $message);
 				}
 			}
