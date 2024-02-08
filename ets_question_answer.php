@@ -9,7 +9,7 @@
  * Requires at least: 5.6
  * WC tested up to: 8.1
  * Requires PHP: 7.0
- * Text Domain: ets_q_n_a
+ * Text Domain: product-questions-answers-for-woocommerce
  * Domain Path: /languages
  */   
  
@@ -28,8 +28,8 @@ class ETS_WOO_PRODUCT_QUESTION_ANSWER {
 	}  
 
 	public function qa_load_local() {
-		$localeDir = dirname(plugin_dir_path( __FILE__ ) ) . '/question-answer-plugin-by-ets/languages/ets_q_n_a-'.get_locale() .'.mo';
-        $res = load_textdomain( 'ets_q_n_a', $localeDir );   
+		$localeDir = dirname(plugin_dir_path( __FILE__ ) ) . '/question-answer-plugin-by-ets/languages/product-questions-answers-for-woocommerce-'.get_locale() .'.mo';
+        $res = load_textdomain( 'product-questions-answers-for-woocommerce', $localeDir );   
     }
 
     public function declare_hpos_compatibility(){
