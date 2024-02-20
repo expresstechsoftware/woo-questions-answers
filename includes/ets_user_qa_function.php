@@ -14,9 +14,6 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 		// Load The Q & A on click Load More Button
 		add_action( 'wp_ajax_ets_product_qa_load_more',array($this, 'load_more_qa'));
 
-		//shortcode for QA listing
-		add_shortcode( 'display_qa_list',array($this, 'display_qa_listing_shortcode'));
-
 		// without login
 		add_action( 'wp_ajax_nopriv_ets_product_qa_load_more',array($this, 'load_more_qa'));
 
@@ -31,6 +28,9 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 
 		//Mail Content Type Html
 		add_filter( 'wp_mail_content_type',array($this, 'set_html_mail_contente_type'));
+
+		//shortcode for QA listing
+		add_shortcode( 'display_qa_list',array($this, 'display_qa_listing_shortcode'));
 
 
 	}
@@ -199,6 +199,8 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 			?>
 			<?php  
 		} 
+		
+		$this->display_qa_listing();
 		 		
 	}
 
