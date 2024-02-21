@@ -7,8 +7,8 @@ Author: ExpressTech Software Solutions Pvt. Ltd.
 Tags: questions, answers, discussions, woocommerce, forum, storefront, details,	e-commerce, expresstech
 Requires PHP: 7.0
 Requires at least: 5.6
-Tested up to: 6.0
-Stable tag: 1.2.2
+Tested up to: 6.3
+Stable tag: 1.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,3 +67,9 @@ No configuration needed! just install and it will start working from there, you 
 
 = 1.2.2 =
 - Fix: Fixed a PHP warning on the admin screen.
+
+= 1.2.3 =
+- Compatibility Testing: Tested plugin compatibility with the latest WordPress and WooCommerce versions.
+
+= 1.2.4 =
+- New Compatibility: Added the compatibility for WooCommerce HPOS (High-Performance Order Storage).
