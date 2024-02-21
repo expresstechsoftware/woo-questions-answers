@@ -29,6 +29,9 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 		//Mail Content Type Html
 		add_filter( 'wp_mail_content_type',array($this, 'set_html_mail_contente_type'));
 
+		//shortcode for QA listing
+		add_shortcode( 'display_qa_list',array($this, 'display_qa_listing_shortcode'));
+
 
 	}
 
@@ -196,48 +199,59 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 				);
 			?>
 			<?php  
-			}  
-			$loadMoreButtonName = get_option('ets_load_more_button_name');
-			$productQaLength = get_option('ets_product_q_qa_list_length'); 
-			$loadMoreButton = get_option('ets_load_more_button'); 	
-			$pagingType = get_option('ets_product_qa_paging_type' ); 
-			$all_questions = get_post_meta( $productId,'ets_question_answer', true );
-
-			if($all_questions && is_array($all_questions)){
-				
-				$etsGetQuestion = array_filter($all_questions, function ($filterQuestion) {
-					return (isset($filterQuestion['approve']) && $filterQuestion['approve'] == 'yes') || !isset($filterQuestion['approve']);
-				});
-			}
+		} 
 		
-			if(!empty($etsGetQuestion)){ 
-				end( $etsGetQuestion);
-				$keyData =  max(array_keys($etsGetQuestion));
+		$this->display_qa_listing();
+		 		
+	}
 
-            } 
+	/**
+ 	*Prepare QA listing data.
+ 	*/
+	public function display_qa_listing(){
+		global $product; 
+		$productId = $product->get_id(); 
+		$loadMoreButtonName = get_option('ets_load_more_button_name');
+		$productQaLength = get_option('ets_product_q_qa_list_length'); 
+		$loadMoreButton = get_option('ets_load_more_button'); 	
+		$pagingType = get_option('ets_product_qa_paging_type' ); 
+		$all_questions = get_post_meta( $productId,'ets_question_answer', true );
+
+		if($all_questions && is_array($all_questions)){
+			
+			$etsGetQuestion = array_filter($all_questions, function ($filterQuestion) {
+				return (isset($filterQuestion['approve']) && $filterQuestion['approve'] == 'yes') || !isset($filterQuestion['approve']);
+			});
+		}
+		
+		if(!empty($etsGetQuestion)){ 
+			end( $etsGetQuestion);
+			$keyData =  max(array_keys($etsGetQuestion));
+
+        } 
 
 			if($loadMoreButton == 1) { 
 				if(empty($loadMoreButtonName)){
 					$loadMoreButtonName = __("Load More",'product-questions-answers-for-woocommerce');
 					update_option( 'ets_load_more_button_name', $loadMoreButtonName );
-				}  
+				}
+
+			
+			if(!empty($etsGetQuestion)){ 
+				
+				$count = 1;
+
+				if (empty($productQaLength)) {  
+				  	$productQaLength = 4;
+					
+				}
 
 				
-				if(!empty($etsGetQuestion)){ 
-					
-					$count = 1;
-
-					if (empty($productQaLength)) {  
-					  	$productQaLength = 4;
-						
-					}
-
-					
-					if($pagingType == 'accordion'){
-						?>
-						<div class='ets-qa-listing'>
-						<?php
-
+				if($pagingType == 'accordion'){
+					?>
+					<div class='ets-qa-listing'>
+					<?php
+          
 						foreach ($etsGetQuestion as $key => $value) {
 
 							?>
@@ -257,25 +271,23 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 							<?php 
 								} else { ?>
 								<span class="ans-content"><b><?php echo __('Answer','product-questions-answers-for-woocommerce') ?>.</b></span>
-								<span class="ans-content-des"><i><?php echo __("Answer awaiting",'product-questions-answers-for-woocommerce');?>...</i>
-								</span>
-								<?php
-							}?>
-							</div>
-
-							<?php  
-							$count++;
-							if($count > $productQaLength){
-								break;
-							} 
-							
-						}
-						?> 
-						<div class='ets-accordion-response-add'></div>
+								<span class="ans-content-des"><i><?php echo __("Answer awaiting",'product-questions-answers-for-woocommerce');?>...</i></span>
+							<?php
+						}?>
 						</div>
-						<?php
-					} else {
+
+						<?php  
+						$count++;
+						if($count > $productQaLength){
+							break;
+						} 
 						
+					}
+					?> 
+					<div class='ets-accordion-response-add'></div>
+					</div>
+					<?php
+				} else {
 						?>
 						<div class="table-responsive my-table">
 						<table class="table table-striped">
@@ -316,57 +328,94 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 						</tbody>
 						</table>  
 					</div>
+						<?php					
+				}
+				 	?>  
+				<button type="submit" id="ets-load-more" class="btn btn-success" name="ets_load_more" value=""><?php echo $loadMoreButtonName; ?></button>
+				<div class="ets_pro_qa_length"><p hidden><?php echo $keyData;?><p></div>
+				<?php
+			}
+		} else {
+			//Show Question Answer Listing Type Table With OUt Load More
+			if(!empty($etsGetQuestion)){ 
+				?>
+				<div class="table-responsive my-table">
+				<table class="table table-striped"> 
+				<?php
+				foreach ($etsGetQuestion as $key => $value) {
+					?> 
+					<tr class="ets-question-top">
+							<td class="ets-question-title"><p><?php echo __('Question','ets_q_n_a'); ?>:</p></td>
+							<td class="ets-question-description"><p><?php echo $value['question'];?></p></td> 
+							<td class="ets-cont-right"><h6 class="user-name"><?php echo $value['user_name'] . "<br>";    
+							echo ($value['date']);
+							?></h6></td>
+					</tr>
+
+					<?php 
+					if(!empty($value['answer'])){?>
+						<tr>
+							<td class="ets-question-title"><p><?php echo __('Answer','ets_q_n_a'); ?>:</p></td>
+							<td colspan="2"><p> <?php echo $value['answer'];?></p></td> 
+						</tr> 
+						<?php 
+					} else { ?>
+						<tr>
+							<td class="ets-question-title"><p><?php echo __('Answer','ets_q_n_a'); ?>:</p></td>
+							<td colspan="2" class="ets-no-answer"><h6><p><i><?php echo __("Answer awaiting",'ets_q_n_a');?>...</i></p></h6></td>	
+						</tr> 
 						<?php
 					}
-					 	?>  
-					<button type="submit" id="ets-load-more" class="btn btn-success" name="ets_load_more" value=""><?php echo $loadMoreButtonName; ?></button>
-					<div class="ets_pro_qa_length"><p hidden><?php echo $keyData;?><p></div>
-					<?php
+					
 				}
-			} else {
-				//Show Question Answer Listing Type Table With OUt Load More
-				if(!empty($etsGetQuestion)){ 
-					?>
-					<div class="table-responsive my-table">
-					<table class="table table-striped"> 
-					<?php
-					foreach ($etsGetQuestion as $key => $value) {
-						?> 
-						<tr class="ets-question-top">
-								<td class="ets-question-title"><p><?php echo __('Question','product-questions-answers-for-woocommerce'); ?>:</p></td>
-								<td class="ets-question-description"><p><?php echo $value['question'];?></p></td> 
-								<td class="ets-cont-right"><h6 class="user-name"><?php echo $value['user_name'] . "<br>";    
-								echo ($value['date']);
-								?></h6></td>
-						</tr>
-
-						<?php 
-						if(!empty($value['answer'])){?>
-							<tr>
-								<td class="ets-question-title"><p><?php echo __('Answer','product-questions-answers-for-woocommerce'); ?>:</p></td>
-								<td colspan="2"><p> <?php echo $value['answer'];?></p></td> 
-							</tr> 
-							<?php 
-						} else { ?>
-							<tr>
-								<td class="ets-question-title"><p><?php echo __('Answer','product-questions-answers-for-woocommerce'); ?>:</p></td>
-								<td colspan="2" class="ets-no-answer"><h6><p><i><?php echo __("Answer awaiting",'product-questions-answers-for-woocommerce');?>...</i></p></h6></td>	
-							</tr> 
-							<?php
-						}
-						
-					}
-					?> 
-					</table>
-					</div>
-					<?php
-				} 
-			}
+				?> 
+				</table>
+				</div>
+				<?php
+			} 
+		}
 			?> 
 		<div class="ets-question-detail-ajax" id="ets-question-detail-ajax"></div>
-  		 
+			 
 		<?php
+
 	}
+
+	/**
+	* Create shortcode for QA listing.
+	*/
+	public function display_qa_listing_shortcode($atts){
+
+	    global $product;
+
+	    if (is_product()) {
+	        $product_id = $product->get_id();
+	    } else {
+	        $atts = shortcode_atts( array(
+	            'product_id' => '',
+	        ), $atts );
+
+	        if(empty($atts['product_id'])){
+	            return __("Please provide a valid product ID.",'ets_q_n_a');
+	        }
+
+	        $product_id = $atts['product_id'];
+	    }
+
+	    if(!empty($product_id)){
+	        $product = wc_get_product($product_id);
+	        if($product){
+	            ob_start();
+	            $this->display_qa_listing();
+	            return ob_get_clean();
+	        } else {
+	             return __("Product not found.",'ets_q_n_a');
+	        }
+	    } else {
+	         return __("Product ID is required.",'ets_q_n_a');
+	    }
+	}
+	
 
 	/**
 	* Load More Button Post Data Using Ajax
