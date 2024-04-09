@@ -203,7 +203,7 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 		
 			?>
 		<div id="qa-tab-qa-listing">
-			<?php $this->display_qa_listing($container_id = '2'); ?>
+			<?php $this->display_qa_listing(2); ?>
 		</div>
 		<?php
 		 		
