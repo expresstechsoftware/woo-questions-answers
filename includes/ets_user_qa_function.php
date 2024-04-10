@@ -390,7 +390,7 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 	public function display_qa_listing_shortcode($atts){
 
 	    global $product;
-
+	    
 	    if (is_product()) {
 	        $product_id = $product->get_id();
 	    } else {
@@ -403,14 +403,20 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 	        }
 
 	        $product_id = $atts['product_id'];
+	        if ($product_id !== '') {
+	        	session_start();
+            	$_SESSION['product_id'] = $product_id;
+        	}
 	    }
-
+	
 	    if(!empty($product_id)){
 	        $product = wc_get_product($product_id);
 	        if($product){
 	            ob_start();
 	            $this->display_qa_listing();
-	            return ob_get_clean();
+	         
+        		return ob_get_clean();
+
 	        } else {
 	             return __("Product not found.",'ets_q_n_a');
 	        }
@@ -428,9 +434,19 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 			echo json_encode(array('error' => "Access not allowed."));
 			die;
 		}
-		$productId = intval($_GET['product_id']); 
+		
+		$productId = intval($_GET['product_id']);
+		if($productId == ''){
+			session_start();
+			if(isset($_SESSION['product_id'])){
+				$productId = intval($_SESSION['product_id']);
+			}
+		}
+
 		$offsetdata = intval($_GET['offset']); 
+		
 		$loadMoreButtonName = get_option('ets_load_more_button_name');
+
 		$pagingType = get_option('ets_product_qa_paging_type' ); 
 		$productQaLength = get_option('ets_product_q_qa_list_length');  
 		$allQuestions = get_post_meta( $productId,'ets_question_answer', true );
@@ -528,6 +544,7 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 				}
 			}
 			$htmlData = ob_get_clean(); 
+
 		}
 		$response = array( 
 			'htmlData'		=> $htmlData,
