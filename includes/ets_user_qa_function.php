@@ -404,8 +404,7 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 
 	        $product_id = $atts['product_id'];
 	        if ($product_id !== '') {
-	        	session_start();
-            	$_SESSION['product_id'] = $product_id;
+	        	
         	}
 	    }
 	
@@ -413,9 +412,10 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 	        $product = wc_get_product($product_id);
 	        if($product){
 	            ob_start();
-	            $this->display_qa_listing();
-	         
-        		return ob_get_clean();
+	            $this->display_qa_listing(); 
+        		$output = ob_get_clean();
+        		$output .= '<div class="ets-shortcode-container"><input type="hidden" name="sh-prd-id" id="sh-product-id" value="' . esc_attr($product_id) . '"></div>';
+        		return $output;
 
 	        } else {
 	             return __("Product not found.",'ets_q_n_a');
@@ -437,10 +437,9 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 		
 		$productId = intval($_GET['product_id']);
 		if($productId == ''){
-			session_start();
-			if(isset($_SESSION['product_id'])){
-				$productId = intval($_SESSION['product_id']);
-			}
+			if (isset($_GET['sh-product_id'])) {
+    			$productId = intval($_GET['sh-product_id']);
+    		}
 		}
 
 		$offsetdata = intval($_GET['offset']); 

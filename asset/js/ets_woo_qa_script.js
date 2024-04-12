@@ -41,16 +41,20 @@ jQuery(document).ready(function(){
 	function handleLoadMoreClick(buttonId, tableId, accordionId,QaLength,QaOffset) {
 	    jQuery(buttonId).click(function(e) {
 	        e.preventDefault();
-	        let submit = jQuery("#ets-qus-form").serialize(); 
+	        let submit = jQuery("#ets-qus-form").serialize();
+	        if(submit.length === 0){
+	        	submit = '';
+	        } 
 	        let qalength = jQuery(QaLength).find('p').text();
 	        let offset = jQuery(QaOffset).find('p').text(); 
+	        let productId = jQuery("#sh-product-id").val();
 	        if (typeof offset == 'undefined') 
 	            offset = 0; 
 	        jQuery.ajax({ 
 	            url: etsWooQaParams.admin_ajax,
 	            type: 'GET',  
 	            dataType: "JSON",
-	            data: 'action=ets_product_qa_load_more&' + submit +'&offset=' + offset +'&load_qa_nonce=' + etsWooQaParams.load_qa_nonce,
+	            data: 'action=ets_product_qa_load_more&' + submit + '&offset=' + offset + '&sh-product_id=' + productId + '&load_qa_nonce=' + etsWooQaParams.load_qa_nonce,
 	            success: function(res) {
 	             
 	                offset = res.offset;  
