@@ -54,7 +54,7 @@ jQuery(document).ready(function(){
 	            url: etsWooQaParams.admin_ajax,
 	            type: 'GET',  
 	            dataType: "JSON",
-	            data: 'action=ets_product_qa_load_more&' + submit + '&offset=' + offset + '&sh-product_id=' + productId + '&load_qa_nonce=' + etsWooQaParams.load_qa_nonce,
+	            data: 'action=ets_product_qa_load_more&' + submit + '&offset=' + offset + '&product_id=' + productId + '&load_qa_nonce=' + etsWooQaParams.load_qa_nonce,
 	            success: function(res) {
 	             
 	                offset = res.offset;  

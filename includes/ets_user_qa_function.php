@@ -414,7 +414,7 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 	            ob_start();
 	            $this->display_qa_listing(); 
         		$output = ob_get_clean();
-        		$output .= '<div class="ets-shortcode-container"><input type="hidden" name="sh-prd-id" id="sh-product-id" value="' . esc_attr($product_id) . '"></div>';
+        		$output .= '<input type="hidden" name="sh-prd-id" id="sh-product-id" value="' . esc_attr($product_id) . '">';
         		return $output;
 
 	        } else {
@@ -436,16 +436,8 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 		}
 		
 		$productId = intval($_GET['product_id']);
-		if($productId == ''){
-			if (isset($_GET['sh-product_id'])) {
-    			$productId = intval($_GET['sh-product_id']);
-    		}
-		}
-
-		$offsetdata = intval($_GET['offset']); 
-		
+		$offsetdata = intval($_GET['offset']); 	
 		$loadMoreButtonName = get_option('ets_load_more_button_name');
-
 		$pagingType = get_option('ets_product_qa_paging_type' ); 
 		$productQaLength = get_option('ets_product_q_qa_list_length');  
 		$allQuestions = get_post_meta( $productId,'ets_question_answer', true );
