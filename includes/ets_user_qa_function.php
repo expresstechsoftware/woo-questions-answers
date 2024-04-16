@@ -203,7 +203,7 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 		
 			?>
 		<div id="qa-tab-qa-listing">
-			<?php $this->display_qa_listing(2); ?>
+			<?php $this->display_qa_listing(); ?>
 		</div>
 		<?php
 		 		
@@ -212,7 +212,7 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 	/**
  	*Prepare QA listing data.
  	*/
-	public function display_qa_listing($container_id = '1'){
+	public function display_qa_listing(){
 		global $product; 
 		$productId = $product->get_id(); 
 		$loadMoreButtonName = get_option('ets_load_more_button_name');
@@ -286,14 +286,14 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 						
 					}
 					?> 
-					<div class='ets-accordion-response-add ets-accordion-list-qa-<?php echo $container_id; ?>'></div>
+					<div class='ets-accordion-response-add ets-accordion-list-qa'></div>
 					</div>
 					<?php
 				} else {
 						?>
 						<div class="table-responsive my-table">
 						<table class="table table-striped">
-						<tbody class="table1 ets-list-table-<?php echo $container_id; ?>">
+						<tbody class="table1 ets-list-table">
 						<?php
 						//Show Question Answer Listing Type Table With Load More 
 						foreach ($etsGetQuestion as $key => $value) {
@@ -333,8 +333,8 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 						<?php					
 				}
 				 	?>  
-				<button type="submit" id="ets-load-more-<?php echo $container_id; ?>" class="btn btn-success ets-qa-load-more" data-container-id="<?php echo $container_id; ?>" name="ets_load_more" value=""><?php echo $loadMoreButtonName; ?></button>
-				<div class="ets_pro_qa_length_<?php echo $container_id; ?>"><p hidden><?php echo $keyData;?><p></div><div id="ets_product_qa_length_<?php echo $container_id; ?>"><p></p></div>
+				<button type="submit" id="ets-load-more" class="btn btn-success ets-qa-load-more" name="ets_load_more" value=""><?php echo $loadMoreButtonName; ?></button>
+				<div class="ets_pro_qa_length"><p hidden><?php echo $keyData; ?></p></div><div id="ets_product_qa_length"><p></p></div>
 	
 				<?php
 			}
@@ -403,9 +403,7 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 	        }
 
 	        $product_id = $atts['product_id'];
-	        if ($product_id !== '') {
-	        	
-        	}
+	        
 	    }
 	
 	    if(!empty($product_id)){
@@ -435,7 +433,7 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 			die;
 		}
 		
-		$productId = intval($_GET['product_id']);
+		$productId = intval($_GET['product_id']);		
 		$offsetdata = intval($_GET['offset']); 	
 		$loadMoreButtonName = get_option('ets_load_more_button_name');
 		$pagingType = get_option('ets_product_qa_paging_type' ); 

@@ -38,42 +38,49 @@ jQuery(document).ready(function(){
 		jQuery(".ets-dis-message-error").text("");
 	});
 
-	function handleLoadMoreClick(buttonId, tableId, accordionId,QaLength,QaOffset) {
-	    jQuery(buttonId).click(function(e) {
-	        e.preventDefault();
-	        let submit = jQuery("#ets-qus-form").serialize();
-	        if(submit.length === 0){
-	        	submit = '';
-	        } 
-	        let qalength = jQuery(QaLength).find('p').text();
-	        let offset = jQuery(QaOffset).find('p').text(); 
-	        let productId = jQuery("#sh-product-id").val();
-	        if (typeof offset == 'undefined') 
-	            offset = 0; 
-	        jQuery.ajax({ 
-	            url: etsWooQaParams.admin_ajax,
-	            type: 'GET',  
-	            dataType: "JSON",
-	            data: 'action=ets_product_qa_load_more&' + submit + '&offset=' + offset + '&product_id=' + productId + '&load_qa_nonce=' + etsWooQaParams.load_qa_nonce,
-	            success: function(res) {
-	             
-	                offset = res.offset;  
-	                jQuery(tableId).append(res.htmlData);  
-	                jQuery(accordionId).append(res.htmlData);
-	                jQuery(QaOffset).find('p').html(offset).hide();
-	                if(offset >= qalength ){
-	              
-	                    jQuery(buttonId).hide();
-	                } 
-	            }
-	        }); 
+	jQuery('.ets-qa-load-more').click(function(e) {
+    	e.preventDefault();
+    	let clickedButton = jQuery(this);
+    	let productId = clickedButton.parent().find("[name='sh-prd-id']").val();
+    	let formPrdId = jQuery('#custId').val();
+   		let accordionList = clickedButton.parent().find('.ets-accordion-list-qa');
+   		let tableList = clickedButton.parent().find('.ets-list-table');
+    	let qaLength = clickedButton.siblings('.ets_pro_qa_length').find('p').text();
+    	let offset = clickedButton.siblings('#ets_product_qa_length').find('p').text();
+
+	    let data = {
+	        action: 'ets_product_qa_load_more',
+	        offset: offset,
+	        load_qa_nonce: etsWooQaParams.load_qa_nonce
+	    };
+
+	    if (productId) {
+	        data.product_id = productId;
+	    } else {
+	        data.product_id = formPrdId;
+	    }
+
+	    if (offset == '') {
+	        offset = 0;
+	    }
+    
+
+	    jQuery.ajax({
+	        url: etsWooQaParams.admin_ajax,
+	        type: 'GET',
+	        dataType: "JSON",
+	        data: data,
+	        success: function(res) {
+	            offset = res.offset;
+	            accordionList.append(res.htmlData);
+	            tableList.append(res.htmlData);
+	            clickedButton.siblings('#ets_product_qa_length').find('p').html(offset).hide();
+	            if(offset >= qaLength ){
+		            clickedButton.hide();
+		        }
+	        }
 	    });
-	}
-
-	handleLoadMoreClick('#ets-load-more-1', '.ets-list-table-1', '.ets-accordion-list-qa-1','.ets_pro_qa_length_1','#ets_product_qa_length_1');
-
-	handleLoadMoreClick('#ets-load-more-2', '.ets-list-table-2', '.ets-accordion-list-qa-2','.ets_pro_qa_length_2','#ets_product_qa_length_2');
- 
+	});	
 }); 
 
 jQuery(document).on('click','.ets-accordion',function(){
