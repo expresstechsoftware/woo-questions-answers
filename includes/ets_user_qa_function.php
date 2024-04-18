@@ -1,3 +1,4 @@
+
 <?php  
 
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -179,7 +180,7 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 				<div class="ets-dis-message-error"><p></p></div>
 				<button id="ets-submit" type="submit" name="submit" class="btn btn-info" ><?php echo __('Submit','product-questions-answers-for-woocommerce'); ?></button> 
 			</form>
-			<div id="ets_product_qa_length"><p></p></div>   
+		  
 			<?php 	
 		} else { ?>
 
@@ -188,7 +189,7 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 				<input type="hidden" id="productlength" class="productlength" name="Product_Qa_Length" value="<?php echo $productQaLength ?>">  
 				<input type="hidden" id="producttitle" name="ets_Product_Title" value="<?php echo $productTitle ?>"> 
 			</form>
-			<div id="ets_product_qa_length"><p></p></div> 
+			
 			<?php
 				global $wp;
 
@@ -197,11 +198,14 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 					__( 'Please <a href="%s">login</a> to post questions', 'product-questions-answers-for-woocommerce' ),
 					apply_filters( 'wc_add_qa_login_url', wp_login_url(home_url( $wp->request )) )
 				);
-			?>
-			<?php  
+			 
 		} 
 		
-		$this->display_qa_listing();
+			?>
+		<div id="qa-tab-qa-listing">
+			<?php $this->display_qa_listing(); ?>
+		</div>
+		<?php
 		 		
 	}
 
@@ -225,9 +229,7 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 		}
 		
 		if(!empty($etsGetQuestion)){ 
-			end( $etsGetQuestion);
-			$keyData =  max(array_keys($etsGetQuestion));
-
+			$keyData = count($etsGetQuestion);
         } 
 
 			if($loadMoreButton == 1) { 
@@ -284,14 +286,14 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 						
 					}
 					?> 
-					<div class='ets-accordion-response-add'></div>
+					<div class='ets-accordion-response-add ets-accordion-list-qa'></div>
 					</div>
 					<?php
 				} else {
 						?>
 						<div class="table-responsive my-table">
 						<table class="table table-striped">
-						<tbody class="table1">
+						<tbody class="table1 ets-list-table">
 						<?php
 						//Show Question Answer Listing Type Table With Load More 
 						foreach ($etsGetQuestion as $key => $value) {
@@ -331,8 +333,9 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 						<?php					
 				}
 				 	?>  
-				<button type="submit" id="ets-load-more" class="btn btn-success" name="ets_load_more" value=""><?php echo $loadMoreButtonName; ?></button>
-				<div class="ets_pro_qa_length"><p hidden><?php echo $keyData;?><p></div>
+				<button type="submit" id="ets-load-more" class="btn btn-success ets-qa-load-more" name="ets_load_more" value=""><?php echo $loadMoreButtonName; ?></button>
+				<div class="ets_pro_qa_length"><p hidden><?php echo $keyData; ?></p></div><div id="ets_product_qa_length"><p></p></div>
+	
 				<?php
 			}
 		} else {
@@ -387,7 +390,7 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 	public function display_qa_listing_shortcode($atts){
 
 	    global $product;
-
+	    
 	    if (is_product()) {
 	        $product_id = $product->get_id();
 	    } else {
@@ -400,14 +403,18 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 	        }
 
 	        $product_id = $atts['product_id'];
+	        
 	    }
-
+	
 	    if(!empty($product_id)){
 	        $product = wc_get_product($product_id);
 	        if($product){
 	            ob_start();
-	            $this->display_qa_listing();
-	            return ob_get_clean();
+	            $this->display_qa_listing(); 
+        		$output = ob_get_clean();
+        		$output .= '<input type="hidden" name="sh-prd-id" id="sh-product-id" value="' . esc_attr($product_id) . '">';
+        		return $output;
+
 	        } else {
 	             return __("Product not found.",'ets_q_n_a');
 	        }
@@ -425,8 +432,9 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 			echo json_encode(array('error' => "Access not allowed."));
 			die;
 		}
-		$productId = intval($_GET['product_id']); 
-		$offsetdata = intval($_GET['offset']); 
+		
+		$productId = intval($_GET['product_id']);		
+		$offsetdata = intval($_GET['offset']); 	
 		$loadMoreButtonName = get_option('ets_load_more_button_name');
 		$pagingType = get_option('ets_product_qa_paging_type' ); 
 		$productQaLength = get_option('ets_product_q_qa_list_length');  
@@ -439,19 +447,8 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 			});
 		}
 
-		$offset = $a = $offsetdata + $productQaLength; 
-		$etsGetQuestion = [];
-		
-		end($filteredQue);  
-		$last_key = key($filteredQue); 
-
-		foreach (range(0,intval($productQaLength)) as $index) {
-
-			if(isset($filteredQue[$a])){
-				$etsGetQuestion[] = $filteredQue[$a];
-				$a++;
-			}
-		}
+		$offset = $offsetdata + $productQaLength;
+		$etsGetQuestion = array_slice($filteredQue, $offset, $productQaLength);
 		
 		if(!empty($etsGetQuestion)){ 
 			ob_start(); 
@@ -536,6 +533,7 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER
 				}
 			}
 			$htmlData = ob_get_clean(); 
+
 		}
 		$response = array( 
 			'htmlData'		=> $htmlData,
