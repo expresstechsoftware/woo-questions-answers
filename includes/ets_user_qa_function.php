@@ -359,7 +359,7 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER {
 					?>
 					 
 					<tr class="ets-question-top">
-							<td class="ets-question-title"><p><?php echo __( 'Question', 'ets_q_n_a' ); ?>:</p></td>
+							<td class="ets-question-title"><p><?php echo __( 'Question', 'product-questions-answers-for-woocommerce' ); ?>:</p></td>
 							<td class="ets-question-description"><p><?php echo $value['question']; ?></p></td> 
 							<td class="ets-cont-right"><h6 class="user-name">
 							<?php
@@ -373,15 +373,15 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER {
 					if ( ! empty( $value['answer'] ) ) {
 						?>
 						<tr>
-							<td class="ets-question-title"><p><?php echo __( 'Answer', 'ets_q_n_a' ); ?>:</p></td>
+							<td class="ets-question-title"><p><?php echo __( 'Answer', 'product-questions-answers-for-woocommerce' ); ?>:</p></td>
 							<td colspan="2"><p> <?php echo $value['answer']; ?></p></td> 
 						</tr> 
 						<?php
 					} else {
 						?>
 						<tr>
-							<td class="ets-question-title"><p><?php echo __( 'Answer', 'ets_q_n_a' ); ?>:</p></td>
-							<td colspan="2" class="ets-no-answer"><h6><p><i><?php echo __( 'Answer awaiting', 'ets_q_n_a' ); ?>...</i></p></h6></td>	
+							<td class="ets-question-title"><p><?php echo __( 'Answer', 'product-questions-answers-for-woocommerce' ); ?>:</p></td>
+							<td colspan="2" class="ets-no-answer"><h6><p><i><?php echo __( 'Answer awaiting', 'product-questions-answers-for-woocommerce' ); ?>...</i></p></h6></td>	
 						</tr> 
 						<?php
 					}
@@ -419,7 +419,7 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER {
 			);
 
 			if ( empty( $atts['product_id'] ) ) {
-				return __( 'Please provide a valid product ID.', 'ets_q_n_a' );
+				return __( 'Please provide a valid product ID.', 'product-questions-answers-for-woocommerce' );
 			}
 
 			$product_id = $atts['product_id'];
@@ -436,10 +436,10 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER {
 				return $output;
 
 			} else {
-				 return __( 'Product not found.', 'ets_q_n_a' );
+				 return __( 'Product not found.', 'product-questions-answers-for-woocommerce' );
 			}
 		} else {
-			 return __( 'Product ID is required.', 'ets_q_n_a' );
+			 return __( 'Product ID is required.', 'product-questions-answers-for-woocommerce' );
 		}
 	}
 
