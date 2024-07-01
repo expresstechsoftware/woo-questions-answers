@@ -88,4 +88,4 @@ No configuration needed! just install and it will start working from there, you 
 - Dev: Added the shortcode [display_qa_list]
 
 = 1.2.7 =
-- Resolved an issue where the shopping cart remained empty and the following error message appeared at checkout:
+- Fixed the blockage in the AJAX requests.
