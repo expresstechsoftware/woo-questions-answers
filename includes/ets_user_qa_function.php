@@ -175,10 +175,10 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER {
 		 	?>
 			<form action="#" method="post"  class="ets-qus-form" name="form">  
 				<textarea id="ques-text-ar" cols="45" rows="3" id="name" class="ets-qa-textarea"   name="question" value="" placeholder="<?php echo __('Enter your question here','product-questions-answers-for-woocommerce') ?>..." height= "75px" ></textarea>
-				<input type="hidden" id="useremail" class="productId" name="usermail" value="<?php echo $uesrEmail ?>">
-				<input type="hidden" id="custId" class="productId" name="product_id" value="<?php echo $productId ?>">
-				<input type="hidden" id="productlength" class="productlength" name="Product_Qa_Length" value="<?php echo $productQaLength ?>">  
-				<input type="hidden" id="producttitle" name="ets_Product_Title" value="<?php echo $productTitle ?>">
+				<input type="hidden" class="productId useremail" name="usermail" value="<?php echo $uesrEmail ?>">
+				<input type="hidden" class="productId custId" name="product_id" value="<?php echo $productId ?>">
+				<input type="hidden" class="productlength" name="Product_Qa_Length" value="<?php echo $productQaLength ?>">  
+				<input type="hidden" class="producttitle" name="ets_Product_Title" value="<?php echo $productTitle ?>">
 				<div class="ets-display-message"><p></p></div>
 				<div class="ets-dis-message-error"><p></p></div>
 				<button class="ets-submit" type="submit" name="submit" class="btn btn-info" ><?php echo __('Submit','product-questions-answers-for-woocommerce'); ?></button> 

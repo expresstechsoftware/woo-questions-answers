@@ -13,7 +13,7 @@ jQuery(document).ready(function(){
 			data: 'action=ets_post_qusetion_answer&' + submit + "&add_qustion_nonce=" + etsWooQaParams.add_qustion_nonce,
 			success: function(res) {   
 				jQuery('.ets-submit').prop('disabled', false);
-				jQuery("#ques-text-ar").val("");
+				jQuery(".ets-qa-textarea").val("");
 				if( res.status == 1 ) {
 					form.find(".ets-display-message").html(res.message);	
 				} else {
@@ -23,7 +23,7 @@ jQuery(document).ready(function(){
         }); 
 	});
 
-	jQuery("#ques-text-ar").on("click", function(){ 
+	jQuery(".ets-qa-textarea").on("click", function(){ 
 		jQuery(".ets-display-message").text(""); 
 		jQuery(".ets-dis-message-error").text("");
 	});
@@ -36,7 +36,7 @@ jQuery(document).ready(function(){
     	e.preventDefault();
     	let clickedButton = jQuery(this);
     	let productId = clickedButton.parent().find("[name='sh-prd-id']").val();
-    	let formPrdId = jQuery('#custId').val();
+    	let formPrdId = jQuery('.custId').val();
    		let accordionList = clickedButton.parent().find('.ets-accordion-list-qa');
    		let tableList = clickedButton.parent().find('.ets-list-table');
     	let qaLength = clickedButton.siblings('.ets_pro_qa_length').find('p').text();
