@@ -34,6 +34,9 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER {
 		// shortcode for QA listing
 		add_shortcode( 'display_qa_list', array( $this, 'display_qa_listing_shortcode' ) );
 
+		//shortcode for QA form
+		add_shortcode('qa_form', array($this, 'display_qa_form'));
+
 	}
 
 	/**
@@ -154,41 +157,40 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER {
 	}
 
 	/**
-	 * Create Text Area and Ask button
-	 */
-	public function ets_ask_qustion_tab() {
-		global $product;
-		$productId       = $product->get_id();
-		$productTitle    = get_the_title( $productId );
-		$user            = wp_get_current_user();
-		$productQaLength = get_option( 'ets_product_q_qa_list_length' );
-		$current_user    = $user->exists();
-		$site_url        = get_site_url();
+ 	*Create Text Area and Ask button form
+ 	*/
+	public function ets_ask_question_form(){
+		global $product; 
+		$productId = $product->get_id();  
+		$productTitle = get_the_title($productId);  
+		$user = wp_get_current_user();
+		$productQaLength = get_option('ets_product_q_qa_list_length');   
+		$current_user = $user->exists();  
+		$site_url = get_site_url();
 
-		if ( $current_user == true ) {
-			$uesrName  = $user->user_login;
-			$userId    = $user->ID;
+		if( $current_user == true ){  
+			$uesrName = $user->user_login;
+			$userId = $user->ID; 
 			$uesrEmail = $user->user_email;
-			?>
-			<form action="#" method="post"  id="ets-qus-form" name="form">  
-				<textarea id="ques-text-ar" cols="45" rows="3" id="name" class="ets-qa-textarea"   name="question" value="" placeholder="<?php echo __( 'Enter your question here', 'product-questions-answers-for-woocommerce' ); ?>..." height= "75px" ></textarea>
-				<input type="hidden" id="useremail" class="productId" name="usermail" value="<?php echo $uesrEmail; ?>">
-				<input type="hidden" id="custId" class="productId" name="product_id" value="<?php echo $productId; ?>">
-				<input type="hidden" id="productlength" class="productlength" name="Product_Qa_Length" value="<?php echo $productQaLength; ?>">  
-				<input type="hidden" id="producttitle" name="ets_Product_Title" value="<?php echo $productTitle; ?>">
+		 	?>
+			<form action="#" method="post"  class="ets-qus-form" name="form">  
+				<textarea id="ques-text-ar" cols="45" rows="3" id="name" class="ets-qa-textarea"   name="question" value="" placeholder="<?php echo __('Enter your question here','product-questions-answers-for-woocommerce') ?>..." height= "75px" ></textarea>
+				<input type="hidden" class="productId useremail" name="usermail" value="<?php echo $uesrEmail ?>">
+				<input type="hidden" class="productId custId" name="product_id" value="<?php echo $productId ?>">
+				<input type="hidden" class="productlength" name="Product_Qa_Length" value="<?php echo $productQaLength ?>">  
+				<input type="hidden" class="producttitle" name="ets_Product_Title" value="<?php echo $productTitle ?>">
 				<div class="ets-display-message"><p></p></div>
 				<div class="ets-dis-message-error"><p></p></div>
-				<button id="ets-submit" type="submit" name="submit" class="btn btn-info" ><?php echo __( 'Submit', 'product-questions-answers-for-woocommerce' ); ?></button> 
+				<button class="ets-submit" type="submit" name="submit" class="btn btn-info" ><?php echo __('Submit','product-questions-answers-for-woocommerce'); ?></button> 
 			</form>
 		  
-			<?php
-		} else {
-			?>
+			<?php 	
+		} else { ?>
 
 			<form action="#" method="post"  id="ets-qus-form" name="form">
-				<input type="hidden" id="custId" class="productId" name="product_id" value="<?php echo $productId; ?>">
-				<input type="hidden" id="productlength" class="productlength" name="Product_Qa_Length" value="<?php echo $productQaLength; ?>">  
-				<input type="hidden" id="producttitle" name="ets_Product_Title" value="<?php echo $productTitle; ?>"> 
+				<input type="hidden" id="custId" class="productId" name="product_id" value="<?php echo $productId ?>">
+				<input type="hidden" id="productlength" class="productlength" name="Product_Qa_Length" value="<?php echo $productQaLength ?>">  
+				<input type="hidden" id="producttitle" name="ets_Product_Title" value="<?php echo $productTitle ?>"> 
 			</form>
 			
 			<?php
@@ -197,16 +199,58 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER {
 				printf(
 					/* translators: login URL */
 					__( 'Please <a href="%s">login</a> to post questions', 'product-questions-answers-for-woocommerce' ),
-					apply_filters( 'wc_add_qa_login_url', wp_login_url( home_url( $wp->request ) ) )
+					apply_filters( 'wc_add_qa_login_url', wp_login_url(home_url( $wp->request )) )
 				);
+			 
+		} 
 
-		}
-
-		?>
+	}
+	
+	/**
+ 	*Create Text Area and Ask button
+ 	*/
+ 	public function ets_ask_qustion_tab() {  
+ 		    $this->ets_ask_question_form();
+			?>
 		<div id="qa-tab-qa-listing">
 			<?php $this->display_qa_listing(); ?>
 		</div>
 		<?php
+		 		
+	}
+
+	public function display_qa_form($atts) {
+		global $product;
+	    
+	    if (is_product()) {
+	        $product_id = $product->get_id();
+	    } else {
+	        $atts = shortcode_atts( array(
+	            'product_id' => '',
+	        ), $atts );
+
+	        if(empty($atts['product_id'])){
+	            return __("Please provide a valid product ID.",'ets_q_n_a');
+	        }
+
+	        $product_id = $atts['product_id'];
+	        
+	    }
+	
+	    if(!empty($product_id)){
+	        $product = wc_get_product($product_id);
+	        if($product){
+	            ob_start();
+	            $this->ets_ask_question_form(); 
+        		$output = ob_get_clean();
+        		return $output;
+
+	        } else {
+	             return __("Product not found.",'ets_q_n_a');
+	        }
+	    } else {
+	         return __("Product ID is required.",'ets_q_n_a');
+	    }
 
 	}
 
