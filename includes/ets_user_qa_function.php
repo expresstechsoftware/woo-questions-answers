@@ -167,7 +167,7 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER {
 		$productQaLength = get_option('ets_product_q_qa_list_length');   
 		$current_user = $user->exists();  
 		$site_url = get_site_url();
-		if (apply_filters('show_question_form', true, $productId)){
+		if (apply_filters('show_question_form', true, $productId, $product)){
 			if( $current_user == true ){  
 				$uesrName = $user->user_login;
 				$userId = $user->ID; 
