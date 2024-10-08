@@ -304,8 +304,11 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER {
 
 					foreach ( $etsGetQuestion as $key => $value ) {
 
+						
 						?>
+
 							<div class="ets-accordion">
+								<?php do_action( "ets_before_question",  $key, $value, $product );?>
 								<span class="que-content"><b><?php echo __( 'Question', 'product-questions-answers-for-woocommerce' ); ?>:</b></span>
 								<span class="que-content-des"><?php echo $value['question']; ?></span>
 								<h6><?php echo $value['user_name'] . '<br>'; ?><?php echo $value['date']; ?></h6>
@@ -350,7 +353,9 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER {
 						foreach ( $etsGetQuestion as $key => $value ) {
 
 							?>
+
 							<tr class="ets-question-top">
+								<td><?php do_action( "ets_before_question",  $key, $value, $product );?></td>
 								<td class="ets-question-title"><p><?php echo __( 'Question', 'product-questions-answers-for-woocommerce' ); ?>:</p></td>
 								<td class="ets-question-description"><p><?php echo $value['question']; ?></p></td> 
 								<td class="ets-cont-right"><h6 class="user-name">
@@ -405,6 +410,7 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER {
 					?>
 					 
 					<tr class="ets-question-top">
+						<td><?php do_action( "ets_before_question",  $key, $value, $product );?></td>
 							<td class="ets-question-title"><p><?php echo __( 'Question', 'product-questions-answers-for-woocommerce' ); ?>:</p></td>
 							<td class="ets-question-description"><p><?php echo $value['question']; ?></p></td> 
 							<td class="ets-cont-right"><h6 class="user-name">
