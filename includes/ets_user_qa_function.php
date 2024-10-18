@@ -103,6 +103,8 @@ class ETS_WOO_PRODUCT_USER_QUESTION_ANSWER {
 				'approve'       => get_option( 'ets_qa_approve', true ) ? get_option( 'ets_qa_approve', true ) : 'no',
 			);
 
+			$etsUserQusetion = apply_filters('ets_new_question_by_users', $etsUserQusetion, $productId);
+
 			$etsBlankArray  = array();
 			$etsGetQuestion = get_post_meta( $productId, 'ets_question_answer', true );
 
