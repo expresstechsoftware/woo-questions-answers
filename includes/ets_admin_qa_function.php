@@ -413,7 +413,7 @@ class ETS_WOO_PRODUCT_ADMIN_QUESTION_ANSWER
 				"approve"		  =>   $admin_approve 
 			);
 
-			$productFirstQa = apply_filters('ets_new_first_question', $productFirstQa, $productId);
+			$productFirstQa = apply_filters('ets_new_question', $productFirstQa, $productId);
 
 			update_post_meta( $productId, 'ets_question_answer',  $productFirstQa );
 		}  
