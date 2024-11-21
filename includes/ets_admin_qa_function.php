@@ -121,6 +121,8 @@ class ETS_WOO_PRODUCT_ADMIN_QUESTION_ANSWER
 					
 
 				} 
+				
+				do_action( 'ets_product_qa_setting_save' );
 			}			 	 
 		} 
 		$aprValue = get_option('ets_qa_approve');
@@ -158,13 +160,16 @@ class ETS_WOO_PRODUCT_ADMIN_QUESTION_ANSWER
 					<td><h4><?php echo __('Auto Approve','product-questions-answers-for-woocommerce'); ?>: </h4></td>
 					<td><input type="checkbox" name="ets_qa_approve" value="yes" <?php if(isset($aprValue) && $aprValue == 'yes'){ echo "checked"; } else { '' ; }?>></td>
 				</tr> 
+				<?php do_action( 'ets_product_qa_setting' );?>
 				<tr><td></td>
 					<td><button type="submit" name="ets_load_more" class="button button-primary button-large"><?php echo __('Submit',"product-questions-answers-for-woocommerce"); ?></button>
 				</tr>
 			</table>
 		</form> 
 
+
 		<?php 
+		
 	} 
 
  	/**
